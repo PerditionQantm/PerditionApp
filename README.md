@@ -1,2 +1,2 @@
 # PerditionApp
-The app that control the Perdition board game
+The app that controls the Trepidation board game
