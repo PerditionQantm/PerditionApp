@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<gameitem>
+	<name>Bell</name>
+	<description>A purple glass bell.</description>
+
+	<dynamic>
+		<description>You wave the bell</description>
+		<intuition>0</intuition>
+	    <feeling>0</feeling>
+	    <sensing>0</sensing>
+	    <thinking>0</thinking>
+	    <perception>0</perception>
+	    <introversion>0</introversion>
+	    <judging>0</judging>
+	    <extraversion>3</extraversion>
+	</dynamic>
+
+	<static>
+		<description>You ignore the bell</description>
+		<intuition>0</intuition>
+	    <feeling>0</feeling>
+	    <sensing>0</sensing>
+	    <thinking>0</thinking>
+	    <perception>0</perception>
+	    <introversion>3</introversion>
+	    <judging>0</judging>
+	    <extraversion>0</extraversion>
+	</static>
+
+	<passive>
+		<description>You admire the bell</description>
+		<intuition>0</intuition>
+	    <feeling>0</feeling>
+	    <sensing>0</sensing>
+	    <thinking>0</thinking>
+	    <perception>3</perception>
+	    <introversion>0</introversion>
+	    <judging>0</judging>
+	    <extraversion>0</extraversion>
+	</passive>
+
+	<aggressive>
+		<description>You smash the bell</description>
+		<intuition>0</intuition>
+	    <feeling>0</feeling>
+	    <sensing>3</sensing>
+	    <thinking>0</thinking>
+	    <perception>0</perception>
+	    <introversion>0</introversion>
+	    <judging>0</judging>
+	    <extraversion>0</extraversion>
+	</aggressive>
+</gameitem>
