@@ -119,7 +119,11 @@ public class ItemEditor : EditorWindow {
 		GUILayout.Space(50.0f);
 		
 		if (GUILayout.Button("Load Item")) {
-			//
+			s_sLastFile = EditorUtility.OpenFilePanel("Load item", "/Resources/ItemFiles/", "xml");
+			if (s_sLastFile.Length != 0) {
+				GUI.FocusControl("Top");
+				LoadItem(s_sLastFile);
+			}
 		}
 		GUILayout.EndHorizontal();
 		GUILayout.EndVertical();
@@ -198,5 +202,38 @@ public class ItemEditor : EditorWindow {
 		writer.WriteEndDocument();
 		
 		writer.Close();
+	}
+
+	public void LoadItem(string path) {
+		s_xmlDoc = XDocument.Load(path);
+		
+		foreach (XElement xroot in s_xmlDoc.Elements()) {
+			foreach (XElement xlayer1 in xroot.Elements()) {
+				if (xlayer1.Name == "name") {
+					s_sName = xlayer1.Value;
+				}
+				else if (xlayer1.Name == "description") {
+					s_sDescription = xlayer1.Value;
+				}
+				
+				if (xlayer1.Name == "attitude") {
+					string tudename = "";
+
+					foreach (XElement xlayer2 in xlayer1.Elements()) {
+						if (xlayer2.Name == "name") {
+							s_dAttitudeLookup[xlayer2.Value].s_Name = xlayer2.Value;
+							tudename = xlayer2.Value;
+						}
+						else if (xlayer2.Name == "description") {
+							s_dAttitudeLookup[tudename].s_Description = xlayer2.Value;
+						}
+
+						if (s_dAttitudeLookup[tudename].dMyersBriggsLookup.ContainsKey(xlayer2.Name.ToString())) {
+							s_dAttitudeLookup[tudename].dMyersBriggsLookup[xlayer2.Name.ToString()] = float.Parse(xlayer2.Value);
+						}
+					}
+				}
+			}
+		}
 	}
 }
