@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
-	public Inventory plyInv;
+	//public Inventory plyInv;
 	public int iItemCount = 0;
 	public int iLastItemCount = 0;
 
@@ -48,7 +48,7 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		iItemCount = plyInv.l_items.Count;
+		//iItemCount = plyInv.l_items.Count;
 
 		if (iItemCount != iLastItemCount) {
 			iLastItemCount = iItemCount;
@@ -62,18 +62,18 @@ public class Player : MonoBehaviour {
 	}
 
 	public void Recalculate() {
-		foreach (GameItem item in plyInv.l_items) {
-			fIntuitionSensingScale += item.fIntuition;
-			fIntuitionSensingScale -= item.fSensing;
-
-			fPerceptionJudgingScale += item.fPerception;
-			fPerceptionJudgingScale -= item.fJudging;
-
-			fFeelingThinkingScale += item.fFeeling;
-			fFeelingThinkingScale -= item.fThinking;
-
-			fIntroversionExtraversionScale += item.fIntroversion;
-			fIntroversionExtraversionScale -= item.fExtraversion;
-		}
+//		foreach (GameItem item in plyInv.l_items) {
+//			fIntuitionSensingScale += item.fIntuition;
+//			fIntuitionSensingScale -= item.fSensing;
+//
+//			fPerceptionJudgingScale += item.fPerception;
+//			fPerceptionJudgingScale -= item.fJudging;
+//
+//			fFeelingThinkingScale += item.fFeeling;
+//			fFeelingThinkingScale -= item.fThinking;
+//
+//			fIntroversionExtraversionScale += item.fIntroversion;
+//			fIntroversionExtraversionScale -= item.fExtraversion;
+//		}
 	}
 }

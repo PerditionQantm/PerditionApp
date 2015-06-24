@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using System.Xml.Serialization;
+using System.Xml;
+using System.IO;
+
 public enum GAME_ITEMS {
 	NONE = 0,
 	BELL,
@@ -22,13 +26,16 @@ public enum GAME_ATTITUDE {
 	AGGRESSIVE
 }
 
+[XmlRoot ("Item")]
 public class GameItem {
 
-	public GAME_ITEMS itemType;
-
+	//public GAME_ITEMS itemType;
+	[XmlElement("Name")]
 	public string sName;
+	[XmlElement ("Description")]
 	public string sDescription;
-
+	[XmlArray ("Attitudes")]
+	[XmlArrayItem ("Dynamic")]
 	public string sDynamicString;
 	public string sStaticString;
 	public string sPassiveString;
@@ -62,5 +69,14 @@ public class GameItem {
 
 	public GameItem() {
 		//
+	}
+
+	static public void Save(string filename, GameItem obj) {
+		var serializer = new XmlSerializer(typeof(GameItem));
+		string fullPath = Path.Combine(Application.persistentDataPath, ("Item_" + obj.sName + ".xml"));
+		var stream = new FileStream(fullPath, FileMode.Create);
+
+		serializer.Serialize(stream, obj);
+		stream.Close();
 	}
 }

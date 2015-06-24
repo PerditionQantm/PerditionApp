@@ -122,15 +122,15 @@ public class BarcodeCam : MonoBehaviour {
 			Result result = null;
 			//Decode the current frame
 			if (a_c32CamImage != null) {
-				Debug.Log("Trying...");
+				//Debug.Log("Trying...");
 				result = GetResult();
 			} 
 			else {
-				Debug.Log("Not Trying!");
+				//Debug.Log("Not Trying!");
 			}
 
 			if (result != null && !bSuccess) {
-				Debug.Log("Found!");
+				Debug.Log("Found " + result.Text + "!");
 				sLastResult = result.Text;
 				bSuccess = true;
 				bFinishedScanning = true;
