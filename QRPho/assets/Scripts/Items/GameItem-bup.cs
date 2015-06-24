@@ -1,14 +1,11 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-
-using System.Xml;
-using System.Xml.Linq;
-using System.Linq;
-
-using UnityEngine.UI;
-using System.Text;
-
+﻿//using UnityEngine;
+//using System.Collections;
+//using System.Collections.Generic;
+//
+//using System.Xml.Serialization;
+//using System.Xml;
+//using System.IO;
+//
 //public enum GAME_ITEMS {
 //	NONE = 0,
 //	BELL,
@@ -20,28 +17,31 @@ using System.Text;
 //	TEDDY,
 //	SAMPLE
 //}
-
-public enum GAME_ATTITUDE {
-	NONE = 0,
-	DYNAMIC,
-	STATIC,
-	PASSIVE,
-	AGGRESSIVE
-}
-
-
-public class GameItem {
-	
-	public string sName;
-	public string sDescription;
-
-	public Attitude atTude;
+//
+//public enum GAME_ATTITUDE {
+//	NONE = 0,
+//	DYNAMIC,
+//	STATIC,
+//	PASSIVE,
+//	AGGRESSIVE
+//}
+//
+//[XmlRoot ("Item")]
+//public class GameItem {
+//
+//	//public GAME_ITEMS itemType;
+//	[XmlElement("Name")]
+//	public string sName;
+//	[XmlElement ("Description")]
+//	public string sDescription;
+//	[XmlArray ("Attitudes")]
+//	[XmlArrayItem ("Dynamic")]
 //	public string sDynamicString;
 //	public string sStaticString;
 //	public string sPassiveString;
 //	public string sAggressiveString;
-
-
+//
+//
 //	//N
 //	[Tooltip("Intuition (N, Subjective/Deductive)")]
 //	public float fIntuition;
@@ -66,8 +66,17 @@ public class GameItem {
 //	//E
 //	[Tooltip("Extraversion (E, Objective/Inductive)")]
 //	public float fExtraversion;
-
-	public GameItem() {
-		//
-	}
-}
+//
+//	public GameItem() {
+//		//
+//	}
+//
+//	static public void Save(string filename, GameItem obj) {
+//		var serializer = new XmlSerializer(typeof(GameItem));
+//		string fullPath = Path.Combine(Application.persistentDataPath, ("Item_" + obj.sName + ".xml"));
+//		var stream = new FileStream(fullPath, FileMode.Create);
+//
+//		serializer.Serialize(stream, obj);
+//		stream.Close();
+//	}
+//}

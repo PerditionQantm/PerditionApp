@@ -4,9 +4,12 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-using System.IO;
+using System.Xml;
+using System.Xml.Linq;
+using System.Linq;
 
 using UnityEngine.UI;
+using System.Text;
 
 public class ItemEditor : EditorWindow {
 
@@ -17,6 +20,9 @@ public class ItemEditor : EditorWindow {
 	static private Vector2 s_vItemsScrollPos;
 
 	static private Dictionary<string, bool> s_dAttitudeToggleLookup;
+
+	static private XDocument s_xmlDoc;
+	static private string s_sLastFile;
 
 	//Item bits
 	static private string s_sName = "Goggles";
@@ -51,6 +57,8 @@ public class ItemEditor : EditorWindow {
 			s_dAttitudeToggleLookup.Add(tude.s_Name, false);
 		}
 
+		s_xmlDoc = new XDocument();
+
 		//ReloadItemList();
 		
 		window.Show();
@@ -61,14 +69,18 @@ public class ItemEditor : EditorWindow {
 
 		//Item
 		//========= GUI BEGIN
+		GUI.SetNextControlName("Top");
 		GUILayout.Label("Name: ");
 		s_sName = GUILayout.TextField(s_sName, 32);
 
+		GUILayout.Space(20.0f);
 		GUILayout.Label("Description: ");
 		s_sDescription = GUILayout.TextArea(s_sDescription, 64, GUILayout.Height(45.0f));
 
+		GUILayout.Space(20.0f);
 		GUILayout.Label("Attitudes: ");
 		foreach (KeyValuePair<string, Attitude> pair in s_dAttitudeLookup) {
+			GUILayout.BeginVertical("box");
 			//Foldout toggle
 			s_dAttitudeToggleLookup[pair.Key] = EditorGUILayout.Foldout(s_dAttitudeToggleLookup[pair.Key], pair.Key);
 
@@ -78,42 +90,30 @@ public class ItemEditor : EditorWindow {
 				pair.Value.s_Description = GUILayout.TextArea(pair.Value.s_Description, 64, GUILayout.Height(45.0f));
 
 				//Stats
-				pair.Value.fIntroversion = EditorGUILayout.FloatField("Introversion", pair.Value.fIntroversion);
-				pair.Value.fExtraversion = EditorGUILayout.FloatField("Extraversion", pair.Value.fExtraversion);
-				pair.Value.fIntuition = EditorGUILayout.FloatField("Intuition", pair.Value.fIntuition);
-				pair.Value.fFeeling = EditorGUILayout.FloatField("Feeling", pair.Value.fFeeling);
-				pair.Value.fSensing = EditorGUILayout.FloatField("Sensing", pair.Value.fSensing);
-				pair.Value.fThinking = EditorGUILayout.FloatField("Thinking", pair.Value.fThinking);
-				pair.Value.fPerception = EditorGUILayout.FloatField("Perception", pair.Value.fPerception);
-				pair.Value.fJudging = EditorGUILayout.FloatField("Judging", pair.Value.fJudging);
+				pair.Value.dMyersBriggsLookup["introversion"] = EditorGUILayout.FloatField("Introversion", pair.Value.dMyersBriggsLookup["introversion"]);
+				pair.Value.dMyersBriggsLookup["extraversion"] = EditorGUILayout.FloatField("Extraversion", pair.Value.dMyersBriggsLookup["extraversion"]);
+				pair.Value.dMyersBriggsLookup["intuition"] = EditorGUILayout.FloatField("Intuition", pair.Value.dMyersBriggsLookup["intuition"]);
+				pair.Value.dMyersBriggsLookup["feeling"] = EditorGUILayout.FloatField("Feeling", pair.Value.dMyersBriggsLookup["feeling"]);
+				pair.Value.dMyersBriggsLookup["sensing"] = EditorGUILayout.FloatField("Sensing", pair.Value.dMyersBriggsLookup["sensing"]);
+				pair.Value.dMyersBriggsLookup["thinking"] = EditorGUILayout.FloatField("Thinking", pair.Value.dMyersBriggsLookup["thinking"]);
+				pair.Value.dMyersBriggsLookup["perception"] = EditorGUILayout.FloatField("Perception", pair.Value.dMyersBriggsLookup["perception"]);
+				pair.Value.dMyersBriggsLookup["judging"] = EditorGUILayout.FloatField("Judging", pair.Value.dMyersBriggsLookup["judging"]);
 			}
+			GUILayout.EndVertical();
 		}
-
-//		s_bShowDynamic = EditorGUILayout.Foldout(s_bShowDynamic, "Dynamic");
-//		if (s_bShowDynamic) {
-//			GUILayout.Label("Description: ");
-//			s_lAttitude = GUILayout.TextField(s_sDynamicDescription, 64);
-//
-//			GUILayout.Label("Myers-Briggs", EditorStyles.boldLabel);
-//
-//			GUILayout.Label("Intuition: ");
-//			GUILayout.Label("Feeling: ");
-//			GUILayout.Label("Sensing: ");
-//			GUILayout.Label("Thinking: ");
-//			GUILayout.Label("Perception: ");
-//			GUILayout.Label("Introversion: ");
-//			GUILayout.Label("Judging: ");
-//			GUILayout.Label("Extraversion: ");
-//		}
-
 		//========= GUI END
 		
 		//File Select
 		//========= GUI BEGIN
+		GUILayout.Space(20.0f);
 		GUILayout.BeginVertical("box");
 		GUILayout.BeginHorizontal("box");
 		if (GUILayout.Button("Save Item")) {
-			//
+			s_sLastFile = EditorUtility.SaveFilePanel("Save item", "/Resources/ItemFiles/", s_sName.ToLower(), "xml");
+			if (s_sLastFile.Length != 0) {
+				GUI.FocusControl("Top");
+				SaveItem(s_sLastFile);
+			}
 		}
 
 		GUILayout.Space(50.0f);
@@ -126,5 +126,77 @@ public class ItemEditor : EditorWindow {
 		//========= GUI END
 
 		GUILayout.EndScrollView();
+	}
+
+	public static void SaveItem(string path) {
+		XmlWriterSettings xsettings = new XmlWriterSettings();
+		xsettings.Encoding = Encoding.ASCII;
+		xsettings.OmitXmlDeclaration = true;
+		
+		XmlWriter writer = XmlWriter.Create(s_sLastFile, xsettings);
+
+		//Document open
+		writer.WriteStartDocument();
+		writer.WriteStartElement("item");
+		writer.WriteWhitespace("\n");
+		
+		//Name
+		writer.WriteWhitespace("\t");
+		writer.WriteStartElement("name");
+		writer.WriteValue(s_sName);
+		writer.WriteEndElement();
+		writer.WriteWhitespace("\n");
+		
+		//Description
+		writer.WriteWhitespace("\t");
+		writer.WriteStartElement("description");
+		writer.WriteValue(s_sDescription);
+		writer.WriteEndElement();
+		writer.WriteWhitespace("\n");
+		
+		writer.WriteWhitespace("\n");
+
+		foreach (KeyValuePair<string, Attitude> tude in s_dAttitudeLookup) {
+			//Attitude
+			writer.WriteWhitespace("\t");
+			writer.WriteStartElement("attitude");
+			writer.WriteWhitespace("\n");
+
+			//Name
+			writer.WriteWhitespace("\t\t");
+			writer.WriteStartElement("name");
+			writer.WriteValue(tude.Value.s_Name);
+			writer.WriteEndElement();
+			writer.WriteWhitespace("\n");
+
+			//Description
+			writer.WriteWhitespace("\t\t");
+			writer.WriteStartElement("description");
+			writer.WriteValue(tude.Value.s_Description);
+			writer.WriteEndElement();
+			writer.WriteWhitespace("\n");
+
+			writer.WriteWhitespace("\n");
+
+			foreach (KeyValuePair<string, float> pair in tude.Value.dMyersBriggsLookup) {
+				if (pair.Value > 0) {
+					writer.WriteWhitespace("\t\t");
+					writer.WriteStartElement(pair.Key);
+					writer.WriteValue(pair.Value);
+					writer.WriteEndElement();
+					writer.WriteWhitespace("\n");
+				}
+			}
+
+			writer.WriteWhitespace("\t");
+			writer.WriteEndElement();
+			writer.WriteWhitespace("\n");
+		}
+
+		//Document end
+		writer.WriteEndElement();
+		writer.WriteEndDocument();
+		
+		writer.Close();
 	}
 }
