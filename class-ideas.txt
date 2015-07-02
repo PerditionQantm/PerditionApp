@@ -1,0 +1,14 @@
+sheriff npc
+
+
+tycoon - set 3? bombs for end of game			madman - set noticeable objects in certain  places, win if all objects remain at end of game, survive			
+deputy - keep sheriff safe				bodyguard - keep target safe until end of game, no need to survive?
+
+bounty hunter - capture criminal			hunter - capture badthing, keep badthing until end of game, survive
+Thief - steal a thing					thief - steal a thing(s), retain until end of game, survive
+
+Rich barfLady - survive and board train			victim - survive, be in location at end of game
+Desperado - kill sheriff and get away with it		polis - destroy badthing, survive
+
+Gambler - make sure badguy wins				accomplice - ensure badthing wins, kill at least 1 player, survive?
+Cattleowner - enquire about cows at 3? locations	investigator - go to 3? locations and perform a contextual check, win if have visited all locations and passed the checks, survive
