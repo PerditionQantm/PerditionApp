@@ -1,31 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MovementPhase : FSM_State<Player>
-{
-		public override void Begin (Player obj)
-		{
-				//Checks if Want To Move
-				//Checks that Movement is still legal
-		}
-		public override void Resume (Player obj)
-		{
-				//Checks if Want To Move
-				//Checks that Movement is still legal or needed
-		}
-		public override void Run (Player obj)
-		{
-				//Waits If No Movement
-				//Moves the player; checks for events
-		}
-		public override void Pause (Player obj)
-		{
-				//Does nothing; to review
-		}
-		public override void End (Player obj)
-		{
-				//Nothing if no movement
-				//Confirms movement
-		}
+public class MovementPhase : FSM_State<TurnController> {
 	
+	public string sDisplayName = "Movement Phase";
+
+	public override void Begin (TurnController obj) {
+		//Reset Turn Variables
+	}
+
+	public override void Resume (TurnController obj) {
+		//Reset Turn Variables
+	}
+
+	public override void Run (TurnController obj) {
+		//Wait
+	}
+
+	public override void Pause (TurnController obj) {
+		//Does nothing; to review
+	}
+
+	public override void End (TurnController obj) {
+		//Does nothing; to review
+	}
+
+	public override string ToString() {
+		return sDisplayName;
+	}
 }

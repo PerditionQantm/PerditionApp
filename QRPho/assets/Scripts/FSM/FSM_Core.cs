@@ -32,6 +32,10 @@ public class FSM_Core<T>
 				}
 		}
 
+	public FSM_State<T> PeekTop() {
+		return st_states.Peek();
+	}
+
 		//Create a new state and put it at the top of the stack, pausing the old one
 		public void PushState (FSM_State<T> new_state)
 		{
@@ -52,6 +56,29 @@ public class FSM_Core<T>
 						st_states.Peek ().Resume (fsmOwner);
 				}
 		}
+
+	//Pause the top of the stack and move it the bottom, resumes the new top EXPENSIVE!
+	public void DropToBottom() {
+		st_states.Peek().Pause(fsmOwner);
+		FSM_State<T> tempstate = st_states.Pop();
+
+		List<FSM_State<T>> templist = new List<FSM_State<T>>();
+
+		foreach (FSM_State<T> state in st_states) {
+			templist.Add(state);
+		}
+
+		Debug.Log("TEMP: " + templist.Count);
+
+		templist.Add(tempstate);
+		st_states.Clear();
+
+		foreach (FSM_State<T> state in templist) {
+			st_states.Push(state);
+		}
+
+		st_states.Peek().Resume(fsmOwner);
+	}
 
 		//Pops states until it reaches the bottom state
 		public void PopUntilBottom ()

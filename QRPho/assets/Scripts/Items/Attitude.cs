@@ -38,7 +38,7 @@ public class Attitude {
 		//
 	}
 
-	public Attitude(string name, string desc = "") {
+	public Attitude(string name, string desc) {
 		s_Name = name;
 		s_Description = desc;
 

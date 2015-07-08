@@ -47,10 +47,10 @@ public class ItemEditor : EditorWindow {
 		s_dAttitudeLookup = new Dictionary<string, Attitude>();
 		s_dAttitudeToggleLookup = new Dictionary<string, bool>();
 
-		s_lAttitudes.Add(new Attitude("Dynamic"));
-		s_lAttitudes.Add(new Attitude("Static"));
-		s_lAttitudes.Add(new Attitude("Aggressive"));
-		s_lAttitudes.Add(new Attitude("Passive"));
+		s_lAttitudes.Add(new Attitude("Dynamic", ""));
+		s_lAttitudes.Add(new Attitude("Static", ""));
+		s_lAttitudes.Add(new Attitude("Aggressive", ""));
+		s_lAttitudes.Add(new Attitude("Passive", ""));
 
 		foreach (Attitude tude in s_lAttitudes) {
 			s_dAttitudeLookup.Add(tude.s_Name, tude);
