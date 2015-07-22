@@ -11,25 +11,19 @@ public class GameServer : MonoBehaviour {
 	//private HostData[] netServerList;
 	//public NetworkConnectionError netError;
 
-	// Use this for initialization
-	void Start () {
-
+	void Start() {
+		//
 	}
 
 	public void StartServer() {
-//		netError = NetworkConnectionError.NoError;
-//
-//		Network.InitializeServer(4, 25002, !Network.HavePublicAddress());
-//		MasterServer.RegisterHost("TrepidationGame", "HauntedMansion1", "2spoopy4me");
-//
-//		if (netError != NetworkConnectionError.NoError) {
-//			Debug.Log(netError.ToString());
-//		}
 		netmng.StartHost();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	public void StartClient() {
+		netmng.ServerChangeScene("net-client");
+	}
+
+	void Update() {
 //		if (MasterServer.PollHostList().Length != 0) {
 //			HostData[] hostData = MasterServer.PollHostList();
 //			int i = 0;

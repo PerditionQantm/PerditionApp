@@ -15,6 +15,9 @@ public class SearchPhase : FSM_State<TurnController> {
 	
 	public override void Run (TurnController obj) {
 		//Wait
+		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+			obj.FSM.PopUntilBottom();
+		}
 	}
 	
 	public override void Pause (TurnController obj) {

@@ -39,7 +39,7 @@ public class DiceController : MonoBehaviour {
 
 		if (protoDie != null) {
 			for (int i = 0; i < iDiceAmount; i++) {
-				l_dice.Add((GameObject)GameObject.Instantiate(protoDie, new Vector3(Random.Range(-4.0f, 4.0f), Random.Range(0.85f, 1.0f), Random.Range(-4.0f, 4.0f)), Quaternion.identity));
+				l_dice.Add((GameObject)GameObject.Instantiate(protoDie, new Vector3(Random.Range(-4.0f, 4.0f), Random.Range(1.0f, 1.1f), Random.Range(-4.0f, 4.0f)), Quaternion.identity));
 				l_dice[l_dice.Count - 1].GetComponent<BoxCollider>().material = l_physmatBounceTypes[Random.Range(0, 3)];
 			}
 		}
@@ -103,8 +103,8 @@ public class DiceController : MonoBehaviour {
 	public void RollDice() {
 		if (fRollCooldown <= 0 && !bRollInProgress) {
 			foreach (GameObject die in l_dice) {
-				die.GetComponent<Rigidbody>().AddForce(Random.Range(-25, 25), Random.Range(8, 16), Random.Range(-25, 25), ForceMode.Impulse);
-				die.GetComponent<Rigidbody>().AddTorque(Random.Range(-500, 500), Random.Range(-500, 500), Random.Range(-500, 500), ForceMode.Impulse);
+				die.GetComponent<Rigidbody>().AddForce(Random.Range(-25, 25), Random.Range(14, 16), Random.Range(-25, 25), ForceMode.Impulse);
+				//die.GetComponent<Rigidbody>().AddTorque(Random.Range(-1, 1), Random.Range(-1, 1), Random.Range(-1, 1), ForceMode.Impulse);
 				die.GetComponent<Die>().bRolling = true;
 				die.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 			}

@@ -15,6 +15,13 @@ public class ActionPhase : FSM_State<TurnController> {
 
 	public override void Run (TurnController obj) {
 			//Wait
+		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+			obj.FSM.PopState();
+		}
+
+		if (Input.GetKeyDown(KeyCode.RightArrow)) {
+			obj.FSM.PushState(new SearchPhase());
+		}
 	}
 
 	public override void Pause (TurnController obj) {
