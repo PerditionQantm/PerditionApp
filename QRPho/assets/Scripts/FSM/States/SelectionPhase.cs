@@ -15,7 +15,7 @@ public class SelectionPhase : FSM_State<TurnController> {
 	
 	public override void Run (TurnController obj) {
 		//Wait
-		if (Input.GetKeyDown(KeyCode.RightArrow)) {
+		if (Input.GetKeyDown(KeyCode.D)) {
 			obj.FSM.PushState(new ActionPhase());
 		}
 	}

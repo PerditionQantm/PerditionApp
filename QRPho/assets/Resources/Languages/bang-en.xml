@@ -1,0 +1,20 @@
+<language>
+	<LanguageName>English (AU)</LanguageName>
+		
+	<GameTitle>Deception</GameTitle>
+		
+	<MenuPlay>Join Game</MenuPlay>
+	<MenuHost>Host Game</MenuHost>
+	<MenuQuit>Exit</MenuQuit>
+	<MenuCancel>Cancel</MenuCancel>
+	<MenuBack>Back</MenuBack>
+	<MenuSearch>Search</MenuSearch>
+	<MenuDeceive>Deceive</MenuDeceive>
+	<MenuMove>Move</MenuMove>
+	<MenuAttack>Fight</MenuAttack>
+	<MenuProbe>Probe</MenuProbe>
+	<MenuInterrogate>Interrogate</MenuInterrogate>
+		
+	<Narration_WildWest_Intro>You blah to the bleh while the Sheriff does woop and then you realise floop.</Narration_WildWest_Intro>
+	<Narration_WildWest_GoodguyFailure>You have failed.</Narration_WildWest_GoodguyFailure>
+</language>

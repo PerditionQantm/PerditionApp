@@ -12,10 +12,10 @@ public class SearchPhase : FSM_State<TurnController> {
 	public override void Resume (TurnController obj) {
 		//Reset Turn Variables
 	}
-	
+
 	public override void Run (TurnController obj) {
 		//Wait
-		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+		if (Input.GetKeyDown(KeyCode.A)) {
 			obj.FSM.PopUntilBottom();
 		}
 	}
