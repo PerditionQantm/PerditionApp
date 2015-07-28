@@ -2,12 +2,12 @@
 using System.Collections;
 
 namespace Deception {
-	//[Flags]
+	[System.Flags]
 	public enum ROOM_EXIT_FLAGS {
-		NONE = 0x0,
-		NORTH = 0x1,
-		EAST = 0x2,
-		SOUTH = 0x4,
-		WEST = 0x8
+		NONE = 0,
+		NORTH = 1 << 0,
+		EAST = 1 << 1,
+		SOUTH = 1 << 2,
+		WEST = 1 << 3
 	}
 }

@@ -9,14 +9,14 @@ public class TurnController : MonoBehaviour {
 	public Text txtInfo;
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		FSM = new FSM_Core<TurnController>();
 		FSM.Init();
 		FSM.Config(this, new SelectionPhase());
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update() {
 		txtInfo.text = FSM.PeekTop().ToString();
 	}
 
