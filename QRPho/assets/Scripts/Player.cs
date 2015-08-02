@@ -33,6 +33,9 @@ public class Player : MonoBehaviour
 
 		public Text txtDebugList;
 
+	public int iActionPoints;
+	public int iDeceptionPoints;
+
 //	//N
 //	[Tooltip("Intuition (N, Subjective/Deductive)")]
 //	public float fTotalIntuition;
@@ -177,4 +180,8 @@ public class Player : MonoBehaviour
 				}
 				return stringList.ToArray ();
 		}
+
+	public void ClearAP() {
+		iActionPoints = 0;
+	}
 }

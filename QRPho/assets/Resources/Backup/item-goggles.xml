@@ -1,0 +1,41 @@
+<item>
+	<name>Goggles</name>
+	<description>Nothing.</description>
+
+	<attitude>
+		<name>Dynamic</name>
+		<description>sfxsfxcvg</description>
+
+		<sensing>1</sensing>
+		<perception>10</perception>
+		<introversion>1</introversion>
+		<judging>1</judging>
+	</attitude>
+	<attitude>
+		<name>Static</name>
+		<description>xcvxcvxcv</description>
+
+		<feeling>1</feeling>
+		<perception>1</perception>
+		<extraversion>1</extraversion>
+	</attitude>
+	<attitude>
+		<name>Aggressive</name>
+		<description>xcvxcxcv</description>
+
+		<sensing>1</sensing>
+	</attitude>
+	<attitude>
+		<name>Passive</name>
+		<description>xcvxcvxc</description>
+
+		<intuition>1</intuition>
+		<feeling>1</feeling>
+		<sensing>2</sensing>
+		<thinking>2</thinking>
+		<perception>2</perception>
+		<introversion>1</introversion>
+		<judging>4</judging>
+		<extraversion>1</extraversion>
+	</attitude>
+</item>
