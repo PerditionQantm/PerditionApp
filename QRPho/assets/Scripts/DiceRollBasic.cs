@@ -29,22 +29,24 @@ public class DiceRollBasic : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		txtResults.text = "Results: ";
-		for (int i = 0; i < a_iDice.Length - 1; i++) {
-			if (a_iDice[i] < iSuccessThreshold) {
-				txtResults.text += " <color=red>" + a_iDice[i].ToString() + "</color>";
-			}
-			else {
-				if (bDoublePerfectSuccess && a_iDice[i] == 6) {
-					txtResults.text += " <color=yellow>" + a_iDice[i].ToString() + "</color>";
+		if (txtResults) {
+			txtResults.text = "Results: ";
+			for (int i = 0; i < a_iDice.Length - 1; i++) {
+				if (a_iDice[i] < iSuccessThreshold) {
+					txtResults.text += " <color=red>" + a_iDice[i].ToString() + "</color>";
 				}
 				else {
-					txtResults.text += " <color=white>" + a_iDice[i].ToString() + "</color>";
+					if (bDoublePerfectSuccess && a_iDice[i] == 6) {
+						txtResults.text += " <color=yellow>" + a_iDice[i].ToString() + "</color>";
+					}
+					else {
+						txtResults.text += " <color=white>" + a_iDice[i].ToString() + "</color>";
+					}
 				}
 			}
-		}
 
-		txtAP.text = "Successes: " + GetSuccesses().ToString();
+			txtAP.text = "Successes: " + GetSuccesses().ToString();
+		}
 	}
 
 	public void Roll(int amount) {
