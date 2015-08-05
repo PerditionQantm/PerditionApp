@@ -5,17 +5,23 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 
-public class Player : MonoBehaviour
-{
-	public Text txtDebugList;
+public class Player : MonoBehaviour {
+
 	public Text txtAP;
-	public Text txtResults;
 	public Text txtDice;
+	public Text txtDeception;
+	public Text txtLastRoll;
+	public Text txtSuccess;
+
+	public bool bUseDeception {get; set;}
 
 	public int iActionPoints = 0;
 	public int iDeceptionPoints = 0;
 	public int iEvidence = 0;
+	public int iDice = 4;
 	public List<GameItem> l_items;
+
+	public int iLastSuccess;
 
 	public float fIntuitionSensingScale = 0.0f;
 	public float fPerceptionJudgingScale = 0.0f;
@@ -23,21 +29,34 @@ public class Player : MonoBehaviour
 	public float fIntroversionExtraversionScale = 0.0f;
 
 	public DiceRollBasic diceRoller;
-	public AudioSource asDiceRoll;
 
 	void Start() {
 		l_items = new List<GameItem>();
-		diceRoller.asDiceRoll = asDiceRoll;
-		diceRoller.iDiceAmount = 4;
-		diceRoller.txtAP = txtAP;
-		diceRoller.txtResults = txtDice;
+		
+		diceRoller.iDiceAmount = iDice;
 	}
 
 	void Update() {
-		//iItemCount = plyInv.l_items.Count;
+		txtAP.text = "AP: " + iActionPoints.ToString();
+		txtDice.text = "Dice:  " + iDice.ToString();
+		txtDeception.text = "DP: " + iDeceptionPoints.ToString();
+		txtLastRoll.text = "Result: " + diceRoller.sResults;
+		txtSuccess.text = "Successes: " + iLastSuccess.ToString();
 	}
 
 	public void ClearAP() {
 		iActionPoints = 0;
+	}
+
+	public void RollForItem() {
+		if (iDeceptionPoints > 0) {
+			diceRoller.Roll(iDice, bUseDeception);
+			iDeceptionPoints--;
+		}
+		else {
+			diceRoller.Roll(iDice);
+		}
+		
+		iLastSuccess = diceRoller.GetSuccesses();
 	}
 }

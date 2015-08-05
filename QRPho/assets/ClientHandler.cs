@@ -5,6 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using UnityEngine.UI;
+
 public class ClientHandler : MonoBehaviour
 {
 
@@ -18,6 +20,8 @@ public class ClientHandler : MonoBehaviour
 
 	int m_iLocalAddress;
 
+	public Text txtDebug;
+
 
 	List<string> m_lLocalNetworkAddresses = new List<string> ();
 
@@ -27,6 +31,8 @@ public class ClientHandler : MonoBehaviour
 	public void OnError (NetworkMessage msg)
 	{
 		Debug.Log ("\t\tERROR: " + msg.reader.ReadString ());
+		txtDebug.text = "ERROR " + msg.msgType.ToString() + ": " + msg.reader.ReadString();
+
 		if (m_bScanning)
 		{
 			m_bNewScan = true;
@@ -37,6 +43,7 @@ public class ClientHandler : MonoBehaviour
 	public void OnConnect (NetworkMessage msg)
 	{
 		Debug.Log ("\t\tConnected");
+		txtDebug.text = "Connected";
 		m_bScanning = false;
 
 		UIPanelManager.OpenPanel ("ClientConnected");
@@ -44,6 +51,7 @@ public class ClientHandler : MonoBehaviour
 	public void OnDisconnect (NetworkMessage msg)
 	{
 		Debug.Log ("\t\tDisconnected");
+		//txtDebug.text = "Disconnected";
 	}
 	// Use this for initialization
 	void Start ()
@@ -52,8 +60,8 @@ public class ClientHandler : MonoBehaviour
 		ConnectionConfig m_Config = new ConnectionConfig ();
 
 		m_Config.ConnectTimeout = 300;
-		m_Config.DisconnectTimeout = 900;
-		m_Client.Configure (m_Config, 1);
+		m_Config.DisconnectTimeout = 450;
+		m_Client.Configure (m_Config, 4);
 
 		m_Client.RegisterHandler (MsgType.Error, OnError);
 		m_Client.RegisterHandler (MsgType.Connect, OnConnect);
@@ -77,11 +85,11 @@ public class ClientHandler : MonoBehaviour
 			{
 				if (m_bNewScan)
 				{
-					
-					ConnectToIP (m_lLocalNetworkAddresses [0]);
+				ConnectToIP ("192.168.43.40");
+					//ConnectToIP (m_lLocalNetworkAddresses [0]);
 					m_bNewScan = false;
-					m_lLocalNetworkAddresses.Add (m_lLocalNetworkAddresses [0]);
-					m_lLocalNetworkAddresses.RemoveAt (0);
+					//m_lLocalNetworkAddresses.Add (m_lLocalNetworkAddresses [0]);
+					//m_lLocalNetworkAddresses.RemoveAt (0);
 				}
 			}
 	}
@@ -110,16 +118,18 @@ public class ClientHandler : MonoBehaviour
 
 	public void ScanForServer ()
 	{
-		if (!m_Client.isConnected)
-		{
+		//if (!m_Client.isConnected)
+		//{
 			Debug.Log ("Starting To Connect...");
+			txtDebug.text = "Starting To Connect...";
 			m_bScanning = true;
 			m_bNewScan = true;
-		}
+		//}
 	}
 
 	public void ConnectToIP (string ipAdd)
 	{
+		txtDebug.text += "\nAttempting " + ipAdd + "...";
 		Debug.Log ("\t Attempting to connect to " + ipAdd + " on server port " + m_iPort + "...");
 		m_Client.Connect (ipAdd, m_iPort);
 	}

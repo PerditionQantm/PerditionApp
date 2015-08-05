@@ -20,4 +20,10 @@ public class CustomLobbyPlayer : NetworkLobbyPlayer
 	{
 	
 	}
+
+	public override void OnClientEnterLobby ()
+	{
+		readyToBegin = true;
+		base.OnClientEnterLobby ();
+	}
 }

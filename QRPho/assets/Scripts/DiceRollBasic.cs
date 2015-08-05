@@ -8,7 +8,7 @@ public class DiceRollBasic : MonoBehaviour {
 
 	public AudioSource asDiceRoll;
 
-	public Text txtResults;
+	public string sResults;
 	public Text txtAP;
 
 	private int[] a_iDice;
@@ -29,30 +29,31 @@ public class DiceRollBasic : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (txtResults) {
-			txtResults.text = "Results: ";
-			for (int i = 0; i < a_iDice.Length - 1; i++) {
-				if (a_iDice[i] < iSuccessThreshold) {
-					txtResults.text += " <color=red>" + a_iDice[i].ToString() + "</color>";
+		sResults = "Results: ";
+		for (int i = 0; i < a_iDice.Length - 1; i++) {
+			if (a_iDice[i] < iSuccessThreshold) {
+				sResults += " <color=red>" + a_iDice[i].ToString() + "</color>";
+			}
+			else {
+				if (bDoublePerfectSuccess && a_iDice[i] == 6) {
+					sResults += " <color=yellow>" + a_iDice[i].ToString() + "</color>";
 				}
 				else {
-					if (bDoublePerfectSuccess && a_iDice[i] == 6) {
-						txtResults.text += " <color=yellow>" + a_iDice[i].ToString() + "</color>";
-					}
-					else {
-						txtResults.text += " <color=white>" + a_iDice[i].ToString() + "</color>";
-					}
+					sResults += " <color=white>" + a_iDice[i].ToString() + "</color>";
 				}
 			}
-
-			txtAP.text = "Successes: " + GetSuccesses().ToString();
 		}
 	}
 
-	public void Roll(int amount) {
+	public void Roll(int amount, bool bonus = false) {
 		asDiceRoll.Play();
 
-		ResetDice(amount);
+		if (bonus) {
+			ResetDice(amount + 1);
+		}
+		else {
+			ResetDice(amount);
+		}
 
 		for (int i = 0; i < iDiceAmount; i++) {
 			a_iDice[i] = Random.Range(1, 7);

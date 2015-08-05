@@ -8,8 +8,9 @@ using UnityEngine.Networking;
 public class LobbyManager : NetworkLobbyManager
 {
 	//public NetworkLobbyManager m_NetMng;
-	public string m_ssLobbyName = "";
+	public string m_ssLobbyName {get; set;}
 	public string m_ssLocalAddress = "";
+	public Text txtDebug;
 
 	public List<Vector2> m_lGUIPositions;
 	public int m_iConnectedPlayers = 0;
@@ -60,15 +61,23 @@ public class LobbyManager : NetworkLobbyManager
 	public override void OnClientConnect (NetworkConnection conn)
 	{
 		Debug.Log ("Player Connected");
+
 		m_iConnectedPlayers ++;
+
+		txtDebug.text = "Player connected (Total: " + m_iConnectedPlayers.ToString() + ")";
+
 		base.OnClientConnect (conn);
-		
+		if (m_iConnectedPlayers >= 4)
+		{
+			CheckReadyToBegin();
+		}
 	}
 
 	public override void OnClientDisconnect (NetworkConnection conn)
 	{
 		Debug.Log ("Player Disconnected");
 		m_iConnectedPlayers --;
+		txtDebug.text = "Player Disconnected";
 		base.OnClientDisconnect (conn);
 	}
 
