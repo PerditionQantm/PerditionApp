@@ -7,8 +7,7 @@ using System.Collections.Generic;
 
 using UnityEngine.UI;
 
-public class ClientHandler : MonoBehaviour
-{
+public class ClientHandler : MonoBehaviour {
 
 	NetworkClient m_Client;
 
@@ -18,15 +17,45 @@ public class ClientHandler : MonoBehaviour
 	string m_ssIPAddress;
 	string m_ssLocalNetwork;
 
-	int m_iLocalAddress;
+	public int m_iLocalAddress;
+
+	public int m_iExceptionCount;
+	//private System.IO.TextWriter m_writer;
 
 	public Text txtDebug;
-
+	public string sLastError;
 
 	List<string> m_lLocalNetworkAddresses = new List<string> ();
 
 	public int m_iPort = 17032;
 
+	//Error catching
+	void OnEnable() {
+		Application.logMessageReceived += HandleLog;
+	}
+
+	void OnGUI() {
+		GUILayout.Label(string.Format("Faults: {0}", m_iExceptionCount));
+		GUILayout.Label(sLastError);
+	}
+
+	private void HandleLog(string condition, string stackTrace, LogType type) {
+		if (type == LogType.Exception) {
+			m_iExceptionCount++;
+			//m_writer.WriteLine("Exception - {0}: {1}\n{2}", type, condition, stackTrace);
+		}
+
+		if (type == LogType.Error) {
+			m_iExceptionCount++;
+			//m_writer.WriteLine("Error - {0}: {1}\n{2}", type, condition, stackTrace);
+			sLastError = type.ToString() + "/" + condition + "/" + stackTrace;
+		}
+	}
+
+	void OnDisable() {
+		Application.logMessageReceived -= HandleLog;
+	}
+	//End error catching
 
 	public void OnError (NetworkMessage msg)
 	{
@@ -85,11 +114,11 @@ public class ClientHandler : MonoBehaviour
 			{
 				if (m_bNewScan)
 				{
-				ConnectToIP ("192.168.43.40");
-					//ConnectToIP (m_lLocalNetworkAddresses [0]);
+				//ConnectToIP ("192.168.43.40");
+					ConnectToIP (m_lLocalNetworkAddresses [0]);
 					m_bNewScan = false;
-					//m_lLocalNetworkAddresses.Add (m_lLocalNetworkAddresses [0]);
-					//m_lLocalNetworkAddresses.RemoveAt (0);
+					m_lLocalNetworkAddresses.Add (m_lLocalNetworkAddresses [0]);
+					m_lLocalNetworkAddresses.RemoveAt (0);
 				}
 			}
 	}
