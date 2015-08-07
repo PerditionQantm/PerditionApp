@@ -1,0 +1,15 @@
+11:17 AM - Error: UNet Client Disconnect Error: Timeout
+UnityEngine.Networking.NetworkIdentity:UNetStaticUpdate()
+
+11:20:35 AM - Error: UNet Client Disconnect Error: Timeout
+UnityEngine.Networking.NetworkIdentity:UNetStaticUpdate()
+
+
+11:20:38 AM - Error: UNet Client Disconnect Error: Timeout
+UnityEngine.Networking.NetworkIdentity:UNetStaticUpdate()
+
+
+11:20:41 AM - Error: UNet Client Disconnect Error: Timeout
+UnityEngine.Networking.NetworkIdentity:UNetStaticUpdate()
+
+

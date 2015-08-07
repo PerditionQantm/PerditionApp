@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 using UnityEngine.UI;
 
@@ -21,6 +22,7 @@ public class ClientHandler : MonoBehaviour {
 
 	public int m_iExceptionCount;
 	//private System.IO.TextWriter m_writer;
+	private StreamWriter m_writer;
 
 	public Text txtDebug;
 	public string sLastError;
@@ -43,12 +45,18 @@ public class ClientHandler : MonoBehaviour {
 		if (type == LogType.Exception) {
 			m_iExceptionCount++;
 			//m_writer.WriteLine("Exception - {0}: {1}\n{2}", type, condition, stackTrace);
+			using (StreamWriter writer = new StreamWriter("loggerman.txt", true)) {
+				writer.WriteLine(System.DateTime.Now.ToLongTimeString() + " - {0}: {1}\n{2}\n", type, condition, stackTrace);
+			}
 		}
 
 		if (type == LogType.Error) {
 			m_iExceptionCount++;
 			//m_writer.WriteLine("Error - {0}: {1}\n{2}", type, condition, stackTrace);
 			sLastError = type.ToString() + "/" + condition + "/" + stackTrace;
+			using (StreamWriter writer = new StreamWriter("loggerman.txt", true)) {
+				writer.WriteLine(System.DateTime.Now.ToLongTimeString() + " - {0}: {1}\n{2}\n", type, condition, stackTrace);
+			}
 		}
 	}
 
