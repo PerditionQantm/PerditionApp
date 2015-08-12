@@ -11,7 +11,14 @@ using System.Linq;
 using UnityEngine.UI;
 using System.Text;
 
+public enum EDIT_TYPE {
+	ITEM,
+	EVENT
+}
+
 public class ItemEditor : EditorWindow {
+
+	static private EDIT_TYPE s_iEditor = EDIT_TYPE.ITEM;
 
 	static private GUIStyle s_guiStyleDisabled;
 	static private GUIStyle s_guiStyleAlert;
@@ -67,67 +74,77 @@ public class ItemEditor : EditorWindow {
 	public void OnGUI() {
 		s_vScrollPos = GUILayout.BeginScrollView(s_vScrollPos);
 
-		//Item
-		//========= GUI BEGIN
-		GUI.SetNextControlName("Top");
-		GUILayout.Label("Name: ");
-		s_sName = GUILayout.TextField(s_sName, 32);
+		s_iEditor = (EDIT_TYPE)EditorGUILayout.EnumPopup("Edit Type", s_iEditor);
 
-		GUILayout.Space(20.0f);
-		GUILayout.Label("Description: ");
-		s_sDescription = GUILayout.TextArea(s_sDescription, 64, GUILayout.Height(45.0f));
+		if (s_iEditor == EDIT_TYPE.ITEM) {
+			//Item
+			//========= GUI BEGIN
+			GUI.SetNextControlName("Top");
+			GUILayout.Label("Name: ");
+			s_sName = GUILayout.TextField(s_sName, 32);
 
-		GUILayout.Space(20.0f);
-		GUILayout.Label("Attitudes: ");
-		foreach (KeyValuePair<string, Attitude> pair in s_dAttitudeLookup) {
+			GUILayout.Space(20.0f);
+			GUILayout.Label("Description: ");
+			s_sDescription = GUILayout.TextArea(s_sDescription, 64, GUILayout.Height(45.0f));
+
+			GUILayout.Space(20.0f);
+			GUILayout.Label("Attitudes: ");
+			foreach (KeyValuePair<string, Attitude> pair in s_dAttitudeLookup) {
+				GUILayout.BeginVertical("box");
+				//Foldout toggle
+				s_dAttitudeToggleLookup[pair.Key] = EditorGUILayout.Foldout(s_dAttitudeToggleLookup[pair.Key], pair.Key);
+
+				if (s_dAttitudeToggleLookup[pair.Value.s_Name]) {
+					//Desc
+					GUILayout.Label("Description: ");
+					pair.Value.s_Description = GUILayout.TextArea(pair.Value.s_Description, 64, GUILayout.Height(45.0f));
+
+					//Stats
+					pair.Value.dMyersBriggsLookup["introversion"] = EditorGUILayout.FloatField("Introversion", pair.Value.dMyersBriggsLookup["introversion"]);
+					pair.Value.dMyersBriggsLookup["extraversion"] = EditorGUILayout.FloatField("Extraversion", pair.Value.dMyersBriggsLookup["extraversion"]);
+					pair.Value.dMyersBriggsLookup["intuition"] = EditorGUILayout.FloatField("Intuition", pair.Value.dMyersBriggsLookup["intuition"]);
+					pair.Value.dMyersBriggsLookup["feeling"] = EditorGUILayout.FloatField("Feeling", pair.Value.dMyersBriggsLookup["feeling"]);
+					pair.Value.dMyersBriggsLookup["sensing"] = EditorGUILayout.FloatField("Sensing", pair.Value.dMyersBriggsLookup["sensing"]);
+					pair.Value.dMyersBriggsLookup["thinking"] = EditorGUILayout.FloatField("Thinking", pair.Value.dMyersBriggsLookup["thinking"]);
+					pair.Value.dMyersBriggsLookup["perception"] = EditorGUILayout.FloatField("Perception", pair.Value.dMyersBriggsLookup["perception"]);
+					pair.Value.dMyersBriggsLookup["judging"] = EditorGUILayout.FloatField("Judging", pair.Value.dMyersBriggsLookup["judging"]);
+				}
+				GUILayout.EndVertical();
+			}
+			//========= GUI END
+			
+			//File Select
+			//========= GUI BEGIN
+			GUILayout.Space(20.0f);
 			GUILayout.BeginVertical("box");
-			//Foldout toggle
-			s_dAttitudeToggleLookup[pair.Key] = EditorGUILayout.Foldout(s_dAttitudeToggleLookup[pair.Key], pair.Key);
-
-			if (s_dAttitudeToggleLookup[pair.Value.s_Name]) {
-				//Desc
-				GUILayout.Label("Description: ");
-				pair.Value.s_Description = GUILayout.TextArea(pair.Value.s_Description, 64, GUILayout.Height(45.0f));
-
-				//Stats
-				pair.Value.dMyersBriggsLookup["introversion"] = EditorGUILayout.FloatField("Introversion", pair.Value.dMyersBriggsLookup["introversion"]);
-				pair.Value.dMyersBriggsLookup["extraversion"] = EditorGUILayout.FloatField("Extraversion", pair.Value.dMyersBriggsLookup["extraversion"]);
-				pair.Value.dMyersBriggsLookup["intuition"] = EditorGUILayout.FloatField("Intuition", pair.Value.dMyersBriggsLookup["intuition"]);
-				pair.Value.dMyersBriggsLookup["feeling"] = EditorGUILayout.FloatField("Feeling", pair.Value.dMyersBriggsLookup["feeling"]);
-				pair.Value.dMyersBriggsLookup["sensing"] = EditorGUILayout.FloatField("Sensing", pair.Value.dMyersBriggsLookup["sensing"]);
-				pair.Value.dMyersBriggsLookup["thinking"] = EditorGUILayout.FloatField("Thinking", pair.Value.dMyersBriggsLookup["thinking"]);
-				pair.Value.dMyersBriggsLookup["perception"] = EditorGUILayout.FloatField("Perception", pair.Value.dMyersBriggsLookup["perception"]);
-				pair.Value.dMyersBriggsLookup["judging"] = EditorGUILayout.FloatField("Judging", pair.Value.dMyersBriggsLookup["judging"]);
+			GUILayout.BeginHorizontal("box");
+			if (GUILayout.Button("Save Item")) {
+				s_sLastFile = EditorUtility.SaveFilePanel("Save item", "/Resources/ItemFiles/", s_sName.ToLower(), "xml");
+				if (s_sLastFile.Length != 0) {
+					GUI.FocusControl("Top");
+					SaveItem(s_sLastFile);
+				}
 			}
+
+			GUILayout.Space(50.0f);
+			
+			if (GUILayout.Button("Load Item")) {
+				s_sLastFile = EditorUtility.OpenFilePanel("Load item", "/Resources/ItemFiles/", "xml");
+				if (s_sLastFile.Length != 0) {
+					GUI.FocusControl("Top");
+					LoadItem(s_sLastFile);
+				}
+			}
+			GUILayout.EndHorizontal();
 			GUILayout.EndVertical();
+			//========= GUI END
 		}
-		//========= GUI END
-		
-		//File Select
-		//========= GUI BEGIN
-		GUILayout.Space(20.0f);
-		GUILayout.BeginVertical("box");
-		GUILayout.BeginHorizontal("box");
-		if (GUILayout.Button("Save Item")) {
-			s_sLastFile = EditorUtility.SaveFilePanel("Save item", "/Resources/ItemFiles/", s_sName.ToLower(), "xml");
-			if (s_sLastFile.Length != 0) {
-				GUI.FocusControl("Top");
-				SaveItem(s_sLastFile);
-			}
-		}
+		else {
+			//Event
+			//========= GUI BEGIN
 
-		GUILayout.Space(50.0f);
-		
-		if (GUILayout.Button("Load Item")) {
-			s_sLastFile = EditorUtility.OpenFilePanel("Load item", "/Resources/ItemFiles/", "xml");
-			if (s_sLastFile.Length != 0) {
-				GUI.FocusControl("Top");
-				LoadItem(s_sLastFile);
-			}
+			//========= GUI END
 		}
-		GUILayout.EndHorizontal();
-		GUILayout.EndVertical();
-		//========= GUI END
 
 		GUILayout.EndScrollView();
 	}
