@@ -4,24 +4,17 @@ using System.Collections;
 public class LobbyGUIHandler : MonoBehaviour
 {
 
-	public CustomLobbyPlayer m_LobbyPlayer;
-	public bool m_bTaken = false;
+	public PUNNetController m_NetController;
 
 	// Use this for initialization
 	void Start ()
 	{
-	
+		m_NetController = this.gameObject.GetComponent<PUNNetController>();
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void Update()
 	{
-		if (m_LobbyPlayer == null)
-		{
-			m_bTaken = false;
-		} else
-		{
-			m_bTaken = true;
-		}
+		//
 	}
 }

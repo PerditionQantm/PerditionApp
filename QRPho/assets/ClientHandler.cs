@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class ClientHandler : MonoBehaviour {
 
 	NetworkClient m_Client;
+	public NetworkLobbyManager m_LobMngr;
 
 	bool m_bScanning = false;
 	bool m_bNewScan = false;
@@ -60,7 +61,7 @@ public class ClientHandler : MonoBehaviour {
 	public void OnError (NetworkMessage msg)
 	{
 		Debug.Log ("\t\tERROR: " + msg.reader.ReadString ());
-		txtDebug.text = "ERROR " + msg.msgType.ToString() + ": " + msg.reader.ReadString();
+		txtDebug.text = "ERROR " + msg.msgType.ToString() + ": " + msg.reader.ToString();
 
 		if (m_bScanning)
 		{
@@ -82,19 +83,25 @@ public class ClientHandler : MonoBehaviour {
 		Debug.Log ("\t\tDisconnected");
 		//txtDebug.text = "Disconnected";
 	}
+
+	public void OnCRC (NetworkMessage msg)
+	{
+		Debug.Log("\t\tCRC Message");
+	}
 	// Use this for initialization
 	void Start ()
 	{
-		m_Client = new NetworkClient ();
 		ConnectionConfig m_Config = new ConnectionConfig ();
 
-		m_Config.ConnectTimeout = 300;
-		m_Config.DisconnectTimeout = 450;
-		m_Client.Configure (m_Config, 4);
+		m_Config.ConnectTimeout = 200;
+		m_Config.DisconnectTimeout = 1000;
+		m_Client.Configure (m_Config, 1);
 
 		m_Client.RegisterHandler (MsgType.Error, OnError);
 		m_Client.RegisterHandler (MsgType.Connect, OnConnect);
 		m_Client.RegisterHandler (MsgType.Disconnect, OnDisconnect);
+		//m_Client.RegisterHandler (MsgType.CRC, OnCRC);
+		
 
 		m_ssIPAddress = Network.player.ipAddress;
 
@@ -161,5 +168,6 @@ public class ClientHandler : MonoBehaviour {
 		txtDebug.text += "\nAttempting " + ipAdd + "...";
 		Debug.Log ("\t Attempting to connect to " + ipAdd + " on server port " + m_iPort + "...");
 		m_Client.Connect (ipAdd, m_iPort);
+		
 	}
 }

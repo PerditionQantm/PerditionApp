@@ -52,7 +52,11 @@ static public class UIPanelManager
 			if (m_CurrentPanel != null)
 			{
 				m_CurrentPanel.gameObject.SetActive (false);
-				m_stPreviousPanel.Push (m_CurrentPanel);
+				if (!m_CurrentPanel.name.Contains("ipanel"))
+				{ 
+					m_stPreviousPanel.Push(m_CurrentPanel); 
+				}
+				
 			}
 			m_CurrentPanel = m_lPanelList.Find (x => x.name.Contains ("_" + newPanel));
 			m_CurrentPanel.gameObject.SetActive (true);
