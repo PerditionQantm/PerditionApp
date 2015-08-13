@@ -23,7 +23,7 @@ static public class UIPanelManager
 		{
 			foreach (Transform chd in m_Canvas.gameObject.GetComponentsInChildren<Transform>(true))
 			{
-				if ((chd.gameObject != m_Canvas.gameObject) && chd.name.Contains ("panel_"))
+				if ((chd.gameObject != m_Canvas.gameObject) && chd.name.ToLower().Contains ("panel_"))
 				{
 					m_lPanelList.Add (chd);
 					chd.gameObject.SetActive (false);
@@ -51,8 +51,10 @@ static public class UIPanelManager
 		{
 			if (m_CurrentPanel != null)
 			{
+				CallCurrentPanelOnClose();
 				m_CurrentPanel.gameObject.SetActive (false);
-				if (!m_CurrentPanel.name.Contains("ipanel"))
+
+				if (!m_CurrentPanel.name.ToLower().Contains("ipanel"))
 				{ 
 					m_stPreviousPanel.Push(m_CurrentPanel); 
 				}
@@ -61,6 +63,32 @@ static public class UIPanelManager
 			m_CurrentPanel = m_lPanelList.Find (x => x.name.Contains ("_" + newPanel));
 			m_CurrentPanel.gameObject.SetActive (true);
 			SetBackButton ();
+			CallCurrentPanelOnOpen();
+		} else
+		{
+			Debug.Log (newPanel + " does not exist as a UI Panel");
+		}
+	}
+
+	/// <summary>
+	/// Attempts to change to a different panel and also erases the past panel history.
+	/// </summary>
+	/// <param name="newPanel">The name of the panel to attempt to switch to</param>
+	static public void ResetToPanel(string newPanel) {
+		if (m_lPanelList.Exists (x => x.name.Contains ("_" + newPanel)))
+		{
+			if (m_CurrentPanel != null)
+			{
+				CallCurrentPanelOnClose();
+				m_CurrentPanel.gameObject.SetActive (false);
+			}
+
+			m_stPreviousPanel.Clear();
+
+			m_CurrentPanel = m_lPanelList.Find (x => x.name.Contains ("_" + newPanel));
+			m_CurrentPanel.gameObject.SetActive (true);
+			SetBackButton ();
+			CallCurrentPanelOnOpen();
 		} else
 		{
 			Debug.Log (newPanel + " does not exist as a UI Panel");
@@ -69,10 +97,12 @@ static public class UIPanelManager
 
 	static public void PreviousPanel ()
 	{
+		CallCurrentPanelOnClose();
 		m_CurrentPanel.gameObject.SetActive (false);
 		m_CurrentPanel = m_stPreviousPanel.Pop ();
 		m_CurrentPanel.gameObject.SetActive (true);
 		SetBackButton ();
+		CallCurrentPanelOnOpen();
 
 	}
 
@@ -167,5 +197,21 @@ static public class UIPanelManager
 		}
 		Debug.Log ("Error: No Button called " + buttonName + " in this panel");
 		return false;
+	}
+
+	static public void CallCurrentPanelOnOpen() {
+		if (m_CurrentPanel != null) {
+			if (m_CurrentPanel.GetComponentInParent<IPanelControllable>() != null) {
+				m_CurrentPanel.GetComponentInParent<IPanelControllable>().OnOpen();
+			}
+		}
+	}
+
+	static public void CallCurrentPanelOnClose() {
+		if (m_CurrentPanel != null) {
+			if (m_CurrentPanel.GetComponentInParent<IPanelControllable>() != null) {
+				m_CurrentPanel.GetComponentInParent<IPanelControllable>().OnClose();
+			}
+		}
 	}
 }
