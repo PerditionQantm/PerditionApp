@@ -20,7 +20,6 @@ public enum ControllerState
 public class PUNNetController : PunBehaviour {
 
 	public ControllerState m_CurrentState { get; private set; }
-	public 
 
 	// Use this for initialization
 	void Start () {
