@@ -14,16 +14,25 @@ public enum ControllerState
 	LOBBY,
 	TRYROOM,
 	ROOM,
+	READY,
 	GAME,
 }
 
 public class PUNNetController : PunBehaviour {
 
+	public string m_ssRoomName { get; set; }
 	public ControllerState m_CurrentState { get; private set; }
+	public ExitGames.Client.Photon.Hashtable m_PropertiesHash;
 
 	// Use this for initialization
 	void Start () {
 		m_CurrentState = ControllerState.NOCONNECTION;
+		m_PropertiesHash = new ExitGames.Client.Photon.Hashtable();
+		m_PropertiesHash.Add("Ready", false);
+
+		//More Custom Properties
+
+		PhotonNetwork.player.SetCustomProperties(m_PropertiesHash);
 	}
 	
 	// Update is called once per frame
@@ -33,25 +42,35 @@ public class PUNNetController : PunBehaviour {
 
 	public override void OnConnectedToPhoton()
 	{
+		base.OnConnectedToPhoton();
+
 		Debug.Log("Connected to Photon!");
 		m_CurrentState = ControllerState.MASTER;
- 		base.OnConnectedToPhoton();
+ 		
 		tryConnectToLobby();
 	}
 
 	public override void OnJoinedLobby()
 	{
+		base.OnJoinedLobby();
+
 		Debug.Log("\tConnected to Lobby!");
 		m_CurrentState = ControllerState.LOBBY;
-		base.OnJoinedLobby();
-		UIPanelManager.OpenPanel("HostSetup");
+		
+		UIPanelManager.OpenPanel("GameLobby");
 
 	}
 
 	public override void OnJoinedRoom()
 	{
-		m_CurrentState = ControllerState.ROOM;
 		base.OnJoinedRoom();
+
+		m_CurrentState = ControllerState.ROOM;
+		Debug.Log("\t\tJoined a room!");
+
+		UIPanelManager.OpenPanel("ClientConnected");
+		UIPanelManager.getUIElementOnPanel("MenuDescription").GetComponentInChildren<Text>().text += PhotonNetwork.room.name;
+
 	}
 
 	public override void OnDisconnectedFromPhoton()
@@ -63,7 +82,14 @@ public class PUNNetController : PunBehaviour {
 	public override void OnCreatedRoom()
 	{
 		m_CurrentState = ControllerState.ROOM;
+		Debug.Log("\t\tCreated a room!");
 		base.OnCreatedRoom();
+	}
+
+	public override void OnPhotonJoinRoomFailed(object[] codeAndMsg)
+	{
+		Debug.Log(codeAndMsg.ToString());
+		base.OnPhotonJoinRoomFailed(codeAndMsg);
 	}
 
 	public void tryConnectToMaster()
@@ -96,7 +122,23 @@ public class PUNNetController : PunBehaviour {
 		opt.isVisible = true;
 		opt.isOpen = true;
 		UIPanelManager.OpenPanel("Connecting");
+		UIPanelManager.getUIElementOnPanel("ConnectDesc").GetComponentInChildren<Text>().text = "Finding or\nCreating Room...";
 		if (PhotonNetwork.JoinOrCreateRoom(roomName, opt, TypedLobby.Default))
+		{
+			m_CurrentState = ControllerState.TRYROOM;
+			return;
+		}
+	}
+	public void tryConnectToRoom()
+	{
+		RoomOptions opt = new RoomOptions();
+
+		opt.maxPlayers = 4;
+		opt.isVisible = true;
+		opt.isOpen = true;
+		UIPanelManager.OpenPanel("Connecting");
+		UIPanelManager.getUIElementOnPanel("ConnectDesc").GetComponentInChildren<Text>().text = "Finding or\nCreating Room...";
+		if (PhotonNetwork.JoinOrCreateRoom(m_ssRoomName, opt, TypedLobby.Default))
 		{
 			m_CurrentState = ControllerState.TRYROOM;
 			return;
@@ -106,5 +148,49 @@ public class PUNNetController : PunBehaviour {
 	public override void OnReceivedRoomListUpdate()
 	{
 		base.OnReceivedRoomListUpdate();
+	}
+
+	public void setPlayerName (string name)
+	{
+		PhotonNetwork.playerName = name;
+	}
+
+	public void setRoomReady(bool ready)
+	{
+		m_PropertiesHash["Ready"] = ready;
+		PhotonNetwork.player.SetCustomProperties(m_PropertiesHash);
+
+		if ((bool)(PhotonNetwork.player.customProperties["Ready"]) == true)
+		{
+			Debug.Log("Ready To Play");
+		}
+		else
+		{
+			Debug.Log("Not Ready To Play");
+		}
+
+		if (PhotonNetwork.playerList.Length == 4)
+		{
+			int readyCount = 0;
+			foreach (PhotonPlayer player in PhotonNetwork.playerList)
+			{
+				if ((bool)(player.customProperties["ready"]) == true)
+				{
+					readyCount += 1;
+				}
+			}
+			if (readyCount >= 4)
+			{
+				Debug.Log("All Players Are Connected And Ready!");
+			}
+			else
+			{
+				Debug.Log("Not All Players Are Ready...");
+			}
+		}
+		else
+		{
+			Debug.Log("Waiting on " + (4 - PhotonNetwork.playerList.Length) + " players...");
+		}
 	}
 }
