@@ -20,7 +20,7 @@ public enum ControllerState
 
 public class PUNNetController : PunBehaviour {
 
-	public string m_ssRoomName { get; set; }
+	public string m_ssRoomName { get; private set; }
 	public ControllerState m_CurrentState { get; private set; }
 	public ExitGames.Client.Photon.Hashtable m_PropertiesHash;
 
@@ -37,7 +37,38 @@ public class PUNNetController : PunBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (UIPanelManager.m_CurrentPanel.name.Contains("_ClientConnected"))
+		{
+			Text tempText = UIPanelManager.getUIElementOnPanel("PlayerList").GetComponent<Text>();
+
+			tempText.text = "";
+
+			foreach (PhotonPlayer player in PhotonNetwork.playerList)
+			{
+				string tempString = "";
+				if ((bool)(player.customProperties["Ready"]))
+				{
+					tempString = player.name + " - Ready\n";
+				}
+				else
+				{
+					tempString = "Connected - Waiting\n";
+				}
+				tempText.text += tempString;
+			}
+
+			if (PhotonNetwork.playerList.Length < 4)
+			{
+				for (int i = 0; i < (4 - PhotonNetwork.playerList.Length); ++i)
+				{
+					tempText.text += "Empty";
+					if (i + PhotonNetwork.playerList.Length < 4)
+					{
+						tempText.text += "\n";
+					}
+				}
+			}
+		}
 	}
 
 	public override void OnConnectedToPhoton()
@@ -69,7 +100,7 @@ public class PUNNetController : PunBehaviour {
 		Debug.Log("\t\tJoined a room!");
 
 		UIPanelManager.OpenPanel("ClientConnected");
-		UIPanelManager.getUIElementOnPanel("MenuDescription").GetComponentInChildren<Text>().text += PhotonNetwork.room.name;
+		UIPanelManager.getUIElementOnPanel("MenuDescription").GetComponentInChildren<Text>().text = "Room Name:\n" + PhotonNetwork.room.name;
 
 	}
 
@@ -150,6 +181,11 @@ public class PUNNetController : PunBehaviour {
 		base.OnReceivedRoomListUpdate();
 	}
 
+	public void setRoomName(string room)
+	{
+		m_ssRoomName = room;
+	}
+
 	public void setPlayerName (string name)
 	{
 		PhotonNetwork.playerName = name;
@@ -192,5 +228,15 @@ public class PUNNetController : PunBehaviour {
 		{
 			Debug.Log("Waiting on " + (4 - PhotonNetwork.playerList.Length) + " players...");
 		}
+	}
+
+	public void disconFromLobby()
+	{
+		PhotonNetwork.Disconnect();
+	}
+
+	public void disconFromRoom()
+	{
+		PhotonNetwork.LeaveRoom();
 	}
 }
