@@ -15,6 +15,7 @@ public class SeperateDiceRoller : MonoBehaviour {
 	public float fForceAmount = 10.0f;
 	public float fTorqueAmount = 10.0f;
 	public ForceMode forceMode;
+	public SeperateDiceRoller[] dice;
 
 	void Update () 
 	{
@@ -28,7 +29,8 @@ public class SeperateDiceRoller : MonoBehaviour {
 				{
 					iCurrentValue = hit.collider.GetComponent<DiceValue>().iDiceSideValue;
 				}
-				
+
+				buRollDiceButton.gameObject.SetActive (true);
 				bRollComplete = true;
 			}
 		}
@@ -47,5 +49,54 @@ public class SeperateDiceRoller : MonoBehaviour {
 		GetComponent<Rigidbody>().AddTorque(Random.onUnitSphere*fTorqueAmount, forceMode);
 		bRollComplete = false;
 		buRollDiceButton.gameObject.SetActive (false);
+	}
+
+	public void OneDice ()
+	{
+		dice[1].gameObject.SetActive (false);
+		dice[2].gameObject.SetActive (false);
+		dice[3].gameObject.SetActive (false);
+		dice[4].gameObject.SetActive (false);
+		dice[5].gameObject.SetActive (false);
+	}
+	public void TwoDice ()
+	{
+		dice[1].gameObject.SetActive (true);
+		dice[2].gameObject.SetActive (false);
+		dice[3].gameObject.SetActive (false);
+		dice[4].gameObject.SetActive (false);
+		dice[5].gameObject.SetActive (false);
+	}
+	public void ThreeDice ()
+	{
+		dice[1].gameObject.SetActive (true);
+		dice[2].gameObject.SetActive (true);
+		dice[3].gameObject.SetActive (false);
+		dice[4].gameObject.SetActive (false);
+		dice[5].gameObject.SetActive (false);
+	}
+	public void FourDice ()
+	{
+		dice[1].gameObject.SetActive (true);
+		dice[2].gameObject.SetActive (true);
+		dice[3].gameObject.SetActive (true);
+		dice[4].gameObject.SetActive (false);
+		dice[5].gameObject.SetActive (false);
+	}
+	public void FiveDice ()
+	{
+		dice[1].gameObject.SetActive (true);
+		dice[2].gameObject.SetActive (true);
+		dice[3].gameObject.SetActive (true);
+		dice[4].gameObject.SetActive (true);
+		dice[5].gameObject.SetActive (false);
+	}
+	public void SixDice ()
+	{
+		dice[1].gameObject.SetActive (true);
+		dice[2].gameObject.SetActive (true);
+		dice[3].gameObject.SetActive (true);
+		dice[4].gameObject.SetActive (true);
+		dice[5].gameObject.SetActive (true);
 	}
 }
