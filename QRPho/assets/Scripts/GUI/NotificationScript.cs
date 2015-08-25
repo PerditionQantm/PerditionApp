@@ -99,6 +99,7 @@ public class NotificationScript : MonoBehaviour {
 		if(PlayerStats.bIsStartOfYourTurn)
 		{
 			YourTurn();
+			GameObject.Find("PlayerStats").GetComponent<PlayerStats>().iPlayerActionPoints = 3;
 			PlayerStats.bIsStartOfYourTurn = false;
 		}
 

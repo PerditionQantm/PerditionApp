@@ -36,10 +36,6 @@ public class GameItem {
 	public string sDescription;
 
 	public Attitude atTude;
-//	public string sDynamicString;
-//	public string sStaticString;
-//	public string sPassiveString;
-//	public string sAggressiveString;
 
 
 //	//N

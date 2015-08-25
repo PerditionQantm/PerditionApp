@@ -17,6 +17,7 @@ public class ItemCatalog : MonoBehaviour {
 	private XDocument s_xmlDoc;
 
 	private List<string> l_sItems;
+	public Dictionary<string, string> d_ssItems;
 	public int iPage;
 
 	private string s_sName = "Name";
@@ -33,6 +34,7 @@ public class ItemCatalog : MonoBehaviour {
 	void Start () {
 		s_xmlDoc = new XDocument();
 		l_sItems = new List<string>();
+		d_ssItems = new Dictionary<string, string>();
 
 //		if (Application.isMobilePlatform) {
 //			LoadItemList("Assets/Resources/");
@@ -40,7 +42,7 @@ public class ItemCatalog : MonoBehaviour {
 //		}
 //		else {
 			//LoadItemList("jar:file://" + Application.dataPath + "!/assets/resources/");
-		LoadItemListR("Items");
+		LoadItemListCompatability("Items");
 			//LoadItemList(Application.streamingAssetsPath);
 			//StartCoroutine("CopyFileASyncOnAndroid");
 		//}
@@ -48,8 +50,14 @@ public class ItemCatalog : MonoBehaviour {
 		//ClickToLoad(0);
 	}
 
-	public void LoadItemListR(string path) {
-		Object[] files = Resources.LoadAll(path);
+	public void LoadItemListCompatability(string path) {
+		Object[] files = Resources.LoadAll(path, typeof(TextAsset));
+		foreach (Object obj in files) {
+			LoadItem(((TextAsset)obj).text);
+
+			d_ssItems.Add(s_sName, s_sDescription);
+		}
+		bLoaded = true;
 		//tl_sItems.AddRange(files);
 	}
 
@@ -74,29 +82,31 @@ public class ItemCatalog : MonoBehaviour {
 			//StartCoroutine("CopyFileASyncOnAndroid");
 		}
 		else {
-			txtName.text = s_sName;
-			txtDesc.text = s_sDescription;
-			txtPages.text = "Page " + (iPage + 1).ToString() + " of " + l_sItems.Count.ToString();
+			txtName.text = d_ssItems.ElementAt(iPage).Key;
+			txtDesc.text = d_ssItems.ElementAt(iPage).Value;
+			txtPages.text = "Page " + (iPage + 1).ToString() + " of " + d_ssItems.Count.ToString();
 		}
 	}
 
 	public void ClickToLoad(int pagemove) {
 		iPage += pagemove;
-		iPage = Mathf.Clamp(iPage, 0, l_sItems.Count - 1);
+		iPage = Mathf.Clamp(iPage, 0, d_ssItems.Count - 1);
 
-		LoadItem(Application.persistentDataPath + "/" + l_sItems[iPage]);
+		//LoadItem(Application.persistentDataPath + "/" + l_sItems[iPage]);
 	}
 
 	public void LoadItem(string path) {
-		s_xmlDoc = XDocument.Load(path);
+		s_xmlDoc = XDocument.Parse(path);
 		
 		foreach (XElement xroot in s_xmlDoc.Elements()) {
 			foreach (XElement xlayer1 in xroot.Elements()) {
 				if (xlayer1.Name == "name") {
 					s_sName = xlayer1.Value;
+					Debug.Log(s_sName);
 				}
 				else if (xlayer1.Name == "description") {
 					s_sDescription = xlayer1.Value;
+					Debug.Log(s_sDescription);
 				}
 			}
 		}
@@ -136,4 +146,8 @@ public class ItemCatalog : MonoBehaviour {
 		bLoaded = true;
 		ClickToLoad(0);
 	} 
+
+	public void ChangeScene(string scene) {
+		PhotonNetwork.LoadLevel(scene);
+	}
 }

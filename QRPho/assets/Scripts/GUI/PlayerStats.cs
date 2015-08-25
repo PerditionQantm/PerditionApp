@@ -46,10 +46,17 @@ public class PlayerStats : MonoBehaviour {
 	public Text textDeceptionPoints;
 	public Text textGoal;
 	public Text textQRResult;
+	public Text textTurnNumber;
+
+	public int iTurnCounter = 1;
+
+	public Inventory invItems;
+
+	public BoardLocation boardloc;
 	
 	void Start ()
-	{
-
+	{	
+		//boardloc.
 	}
 
 	void Update ()
@@ -138,6 +145,15 @@ public class PlayerStats : MonoBehaviour {
 				bIsEndOfYourTurn = false;
 			}
 		}
+
+		textTurnNumber.text = "Turn " + iTurnCounter.ToString();
+	}
+
+	public void NextTurn() {
+		iTurnCounter++;
+		bIsEndOfYourTurn = false;
+		bIsYourTurn = false;
+		bIsStartOfYourTurn = true;
 	}
 
 	public void ButcherButton ()

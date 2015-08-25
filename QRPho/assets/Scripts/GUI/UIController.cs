@@ -9,6 +9,7 @@ public class UIController : MonoBehaviour {
 	public RectTransform rectActionPanel;
 	public RectTransform rectInfoPanel;
 	public RectTransform rectInvPanel;
+	public RectTransform rectMovePanel;
 	public RectTransform rectDiceRollerPanel;
 	public RectTransform rectScannerPanel;
 
@@ -33,7 +34,13 @@ public class UIController : MonoBehaviour {
 	public bool bIsScannerOpen = false;
 	public bool bIsScannerMoving = false;
 
+	private float fMoveTimer = 0f;
+	public bool bIsMoveOpen = false;
+	public bool bIsMoveMoving = false;
+
 	private DiceCalculator DiceCalculator;
+
+	public GameBoard board;
 
 	void Start ()
 	{
@@ -48,6 +55,7 @@ public class UIController : MonoBehaviour {
 		fInvTimer = Mathf.Clamp (fInvTimer, 0, 1);
 		fDiceRollerTimer = Mathf.Clamp (fDiceRollerTimer, 0, 1);
 		fScannerTimer = Mathf.Clamp (fScannerTimer, 0, 1);
+		fMoveTimer = Mathf.Clamp (fMoveTimer, 0, 1);
 
 		if(bIsActionOpen)
 		{
@@ -161,8 +169,7 @@ public class UIController : MonoBehaviour {
 			}
 		}
 
-		if(bIsScannerOpen)
-		{
+		if (bIsScannerOpen) {
 			fScannerTimer += 2 * Time.deltaTime;
 			rectScannerPanel.transform.position = Vector3.Lerp (rectPositionStart.transform.position,
 			                                                    rectPositionEnd.transform.position,
@@ -185,6 +192,33 @@ public class UIController : MonoBehaviour {
 				if (fScannerTimer <= 0f)
 				{
 					bIsScannerMoving = false;
+				}
+			}
+		}
+
+		if (bIsMoveOpen) {
+			board.ShowMap();
+			fMoveTimer += 2 * Time.deltaTime;
+			rectMovePanel.transform.position = Vector3.Lerp (rectPositionStart.transform.position,
+			                                                    rectPositionEnd.transform.position,
+			                                                    fScannerTimer);
+			
+			if (fMoveTimer >= 1f) {
+				bIsMoveMoving = false;
+			}
+		}
+		else
+		{
+			board.HideMap();
+			fMoveTimer -= 2 * Time.deltaTime;
+			if (Time.time > 2f)
+			{
+				rectMovePanel.transform.position = Vector3.Lerp (rectPositionStart.transform.position,
+				                                                    rectPositionEnd.transform.position,
+				                                                    fScannerTimer);
+				
+				if (fMoveTimer <= 0f) {
+					bIsMoveMoving = false;
 				}
 			}
 		}
@@ -306,6 +340,12 @@ public class UIController : MonoBehaviour {
 //				goScanCamera.SetActive (true);
 //			}
 //		}
+	}
+
+	public void OpenCloseMovePanel ()
+	{
+		bIsMoveOpen = !bIsMoveOpen;
+		bIsMoveMoving = true;
 	}
 
 	public void OpenCloseInvPanel ()

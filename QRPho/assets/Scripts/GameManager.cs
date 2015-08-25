@@ -7,13 +7,17 @@ public class GameManager : MonoBehaviour {
 	
 	void Start() {
 		//lang.l_langs.Add(LanguageHandler.Load("Assets/Resources/lang-en.xml"));
-		lang = new LanguageHandler();
-		lang.LoadAllLanguages("Assets/Resources/Languages/");
+		//lang = new LanguageHandler();
+		//lang.LoadAllLanguages("Assets/Resources/Languages/");
 
 		//Debug.Log(lang.GetDefaultLanguage().GameTitle);
 	}
 
 	void Update() {
 	
+	}
+
+	public void ChangeScene(string scene) {
+		PhotonNetwork.LoadLevel(scene);
 	}
 }

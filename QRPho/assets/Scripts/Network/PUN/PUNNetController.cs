@@ -269,7 +269,6 @@ public class PUNNetController : PunBehaviour {
 		{
 			Debug.Log("Not Ready To Play");
 		}
-<<<<<<< HEAD
 
 		if (PhotonNetwork.playerList.Length == 4)
 		{
@@ -295,8 +294,7 @@ public class PUNNetController : PunBehaviour {
 		{
 			Debug.Log("Waiting on " + (4 - PhotonNetwork.playerList.Length) + " players...");
 		}
-=======
->>>>>>> f463ff94858a93619cac0b80434b129ca89062f0
+
 	}
 
 	public void disconFromLobby()
@@ -307,5 +305,9 @@ public class PUNNetController : PunBehaviour {
 	public void disconFromRoom()
 	{
 		PhotonNetwork.LeaveRoom();
+	}
+
+	public void ChangeScene(string scene) {
+		PhotonNetwork.LoadLevel(scene);
 	}
 }

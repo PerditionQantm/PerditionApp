@@ -5,8 +5,11 @@ using System.Collections.Generic;
 public class GameBoard : MonoBehaviour {
 
 	public BoardLocation[,] ll_rooms;
+	public GameObject[,] l_goRooms;
 	public int iWidth = 5;
 	public int iHeight = 4;
+
+	public Transform trStart;
 
 	public GameObject protoTile;
 	public Sprite sprStation;
@@ -20,13 +23,17 @@ public class GameBoard : MonoBehaviour {
 	public Sprite sprStable;
 	public Sprite sprLimits;
 	public Sprite sprStore;
+
+	public bool bVisible;
 	
 	void Start() {
 		ll_rooms = new BoardLocation[iHeight, iWidth];
+		l_goRooms = new GameObject[iHeight, iWidth];
 
 		for (int i = 0; i < iHeight; i++) {
 			for (int j = 0; j < iWidth; j++) {
 				ll_rooms[i, j] = new BoardLocation("", true, Deception.ROOM_EXIT_FLAGS.NONE);
+				Vector3 vectTemp = new Vector3(trStart.position.x, trStart.position.y, trStart.position.z);
 			}
 		}
 
@@ -55,6 +62,10 @@ public class GameBoard : MonoBehaviour {
 				if (ll_rooms[i, j].sName != "") {
 					newtile = (GameObject)GameObject.Instantiate(protoTile, new Vector2(i, -j), Quaternion.identity);
 					newtile.GetComponent<SpriteRenderer>().sprite = ll_rooms[i, j].sprTile;
+					l_goRooms[i, j] = newtile;
+					l_goRooms[i, j].transform.SetParent(trStart);
+					//l_goRooms[i, j].transform.position = new Vector3(trStart.position.x + i, trStart.position.y + j, 0);
+					//l_goRooms[i, j].transform.localScale = new Vector2(80, 80);
 
 					if ((ll_rooms[i, j].iExits & Deception.ROOM_EXIT_FLAGS.NORTH) == Deception.ROOM_EXIT_FLAGS.NORTH) {
 						newtile.GetComponent<Tile>().goUpLink.SetActive(true);
@@ -74,9 +85,28 @@ public class GameBoard : MonoBehaviour {
 				}
 			}
 		}
+		trStart.position = new Vector2(trStart.position.x - 2, trStart.position.y + 1);
 	}
 
 	void Update() {
 	
+	}
+
+	public void ShowMap() {
+		trStart.gameObject.SetActive(true);
+//		for (int i = 0; i < iHeight; i++) {
+//			for (int j = 0; j < iWidth; j++) {
+//				l_goRooms[i, j].gameObject.SetActive(true);
+//			}
+//		}
+	}
+
+	public void HideMap() {
+		trStart.gameObject.SetActive(false);
+//		for (int i = 0; i < iHeight; i++) {
+//			for (int j = 0; j < iWidth; j++) {
+//				l_goRooms[i, j].gameObject.SetActive(false);
+//			}
+//		}
 	}
 }
