@@ -218,6 +218,7 @@ public class PUNNetController : PunBehaviour {
 			if (readyCount >= 4)
 			{
 				Debug.Log("All Players Are Connected And Ready!");
+				PhotonNetwork.LoadLevel("UIPrototype");
 			}
 			else
 			{

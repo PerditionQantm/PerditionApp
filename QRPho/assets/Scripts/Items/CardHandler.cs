@@ -100,11 +100,6 @@ public class CardHandler : MonoBehaviour {
 			PlayerStats.iExtraArrestDice += 1;
 			cardInstance.buUseButton.gameObject.SetActive (false);
 		}
-		else if (effect == "Extra Dice")
-		{
-			PlayerStats.iExtraDice += 1;
-			cardInstance.buUseButton.gameObject.SetActive (false);
-		}
 		else if (effect == "Damage Reduction")
 		{
 			cardInstance.iUses = uses;

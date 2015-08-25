@@ -62,17 +62,15 @@ public class BarcodeCam : MonoBehaviour {
 		}
 	}
 
-//	void OnEnable() {
-//		if (camTexture != null) {
-//			camTexture.Play();
-//			iWidth = camTexture.width;
-//			iHeight = camTexture.height;
-//		}
-//	}
+	void OnEnable() {
+		if (camTexture != null) {
+			camTexture.Play();
+		}
+	}
 
 	void OnDisable() {
 		if (camTexture != null) {
-			camTexture.Pause();
+			camTexture.Stop();
 		}
 	}
 

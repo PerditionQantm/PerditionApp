@@ -40,11 +40,17 @@ public class ItemCatalog : MonoBehaviour {
 //		}
 //		else {
 			//LoadItemList("jar:file://" + Application.dataPath + "!/assets/resources/");
-			LoadItemList(Application.streamingAssetsPath);
-			StartCoroutine("CopyFileASyncOnAndroid");
+		LoadItemListR("Items");
+			//LoadItemList(Application.streamingAssetsPath);
+			//StartCoroutine("CopyFileASyncOnAndroid");
 		//}
 
 		//ClickToLoad(0);
+	}
+
+	public void LoadItemListR(string path) {
+		Object[] files = Resources.LoadAll(path);
+		//tl_sItems.AddRange(files);
 	}
 
 	public void LoadItemList(string path) {
