@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Timers;
 using ExitGames.Client;
 using Photon;
 
@@ -24,6 +25,11 @@ public class PUNNetController : PunBehaviour {
 	public ControllerState m_CurrentState { get; private set; }
 	public ExitGames.Client.Photon.Hashtable m_PropertiesHash;
 
+	public Text m_GameTimerDisplay = null;
+	float m_StartTimer = 0.0f;
+
+	bool m_bCounting = false;
+
 	// Use this for initialization
 	void Start () {
 		m_CurrentState = ControllerState.NOCONNECTION;
@@ -33,12 +39,18 @@ public class PUNNetController : PunBehaviour {
 		//More Custom Properties
 
 		PhotonNetwork.player.SetCustomProperties(m_PropertiesHash);
+
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
 		if (UIPanelManager.m_CurrentPanel.name.Contains("_ClientConnected"))
 		{
+			if (m_GameTimerDisplay == null)
+			{
+				m_GameTimerDisplay = UIPanelManager.getUIElementOnPanel("TimerToGame").GetComponent<Text>();
+			}
 			Text tempText = UIPanelManager.getUIElementOnPanel("PlayerList").GetComponent<Text>();
 
 			tempText.text = "";
@@ -68,6 +80,59 @@ public class PUNNetController : PunBehaviour {
 					}
 				}
 			}
+			if (PhotonNetwork.playerList.Length == 1)
+			{
+				int readyCount = 0;
+				foreach (PhotonPlayer player in PhotonNetwork.playerList)
+				{
+					if ((bool)(player.customProperties["Ready"]) == true)
+					{
+						readyCount += 1;
+					}
+				}
+				if (readyCount >= 1)
+				{
+					if (!m_bCounting)
+					{
+						Debug.Log("Not Counting");
+						m_StartTimer = 0.0f;
+						m_bCounting = true;
+						if (!m_GameTimerDisplay.IsActive())
+						{
+							m_GameTimerDisplay.gameObject.SetActive(true);
+						}
+					}
+					else
+					{
+						if (m_StartTimer >= 6.0f)
+						{
+							PhotonNetwork.LoadLevel("UIPrototype");
+						}
+						else
+						{
+							Debug.Log("Counting");
+							m_StartTimer += Time.deltaTime;
+							m_GameTimerDisplay.text = string.Format("Time until Start\n{0}", decimal.Round((decimal)(6.0f - m_StartTimer), 2));
+						}
+					}
+					
+				}
+				else
+				{
+					Debug.Log("Not All Players Are Ready...");
+					m_StartTimer = 0.0f;
+					m_bCounting = false;
+					if (m_GameTimerDisplay.IsActive())
+					{
+						m_GameTimerDisplay.gameObject.SetActive(false);
+					}
+				}
+			}
+			else
+			{
+				Debug.Log("Waiting on " + (4 - PhotonNetwork.playerList.Length) + " players...");
+			}
+			
 		}
 	}
 
@@ -204,6 +269,7 @@ public class PUNNetController : PunBehaviour {
 		{
 			Debug.Log("Not Ready To Play");
 		}
+<<<<<<< HEAD
 
 		if (PhotonNetwork.playerList.Length == 4)
 		{
@@ -229,6 +295,8 @@ public class PUNNetController : PunBehaviour {
 		{
 			Debug.Log("Waiting on " + (4 - PhotonNetwork.playerList.Length) + " players...");
 		}
+=======
+>>>>>>> f463ff94858a93619cac0b80434b129ca89062f0
 	}
 
 	public void disconFromLobby()

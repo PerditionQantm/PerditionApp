@@ -1,6 +1,22 @@
 fileFormatVersion: 2
 guid: 5cf0859e243481e4eab02edc1f09a556
-DefaultImporter:
+PluginImporter:
+  serializedVersion: 1
+  iconMap: {}
+  executionOrder: {}
+  isPreloaded: 0
+  platformData:
+    Any:
+      enabled: 0
+      settings: {}
+    Editor:
+      enabled: 0
+      settings:
+        DefaultValueInitialized: true
+    WindowsStoreApps:
+      enabled: 1
+      settings:
+        SDK: SDK80
   userData: 
   assetBundleName: 
   assetBundleVariant: 
