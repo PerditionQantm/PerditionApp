@@ -49,7 +49,7 @@ public class PUNNetController : PunBehaviour {
 		{
 			if (m_GameTimerDisplay == null)
 			{
-				m_GameTimerDisplay = UIPanelManager.getUIElementOnPanel("TimerToGame").GetComponent<Text>();
+				//m_GameTimerDisplay = UIPanelManager.getUIElementOnPanel("TimerToGame").GetComponent<Text>();
 			}
 			Text tempText = UIPanelManager.getUIElementOnPanel("PlayerList").GetComponent<Text>();
 
@@ -122,10 +122,10 @@ public class PUNNetController : PunBehaviour {
 					Debug.Log("Not All Players Are Ready...");
 					m_StartTimer = 0.0f;
 					m_bCounting = false;
-					if (m_GameTimerDisplay.IsActive())
-					{
-						m_GameTimerDisplay.gameObject.SetActive(false);
-					}
+//					if (m_GameTimerDisplay.IsActive())
+//					{
+//						m_GameTimerDisplay.gameObject.SetActive(false);
+//					}
 				}
 			}
 			else
